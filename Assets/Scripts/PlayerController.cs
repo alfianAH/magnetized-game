@@ -9,22 +9,25 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private UIControllerScript uiControl;
 
+    private AudioSource audio;
     private GameObject closestTower,
         hookedTower;
     private Rigidbody2D rb2D;
-
-    private bool isPulled = false;
+    private Vector3 startPosition;
+    
+    private bool isPulled = false,
+        isCrashed = false;
     
     private void Start()
     {
+        audio = GetComponent<AudioSource>();
         rb2D = GetComponent<Rigidbody2D>();
+
+        startPosition = transform.position;
     }
 
     private void Update()
     {
-        // Move the object
-        rb2D.velocity = -transform.up * moveSpeed;
-
         if (Input.GetKey(KeyCode.Z) && !isPulled)
         {
             if (closestTower && !hookedTower)
@@ -52,6 +55,21 @@ public class PlayerController : MonoBehaviour
         {
             isPulled = false;
             hookedTower = null;
+            rb2D.angularVelocity = 0;
+        }
+
+        if (isCrashed)
+        {
+            if (!audio.isPlaying)
+            {
+                // Restart scene
+                RestartPosition();
+            }
+        }
+        else
+        {
+            // Move the object
+            rb2D.velocity = -transform.up * moveSpeed;
         }
     }
 
@@ -59,8 +77,14 @@ public class PlayerController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Wall"))
         {
-            //Hide game object
-            gameObject.SetActive(false);
+            if (!isCrashed)
+            {
+                // Play SFX
+                audio.Play();
+                rb2D.velocity = Vector2.zero;
+                rb2D.angularVelocity = 0f;
+                isCrashed = true;
+            }
         }
     }
 
@@ -95,6 +119,24 @@ public class PlayerController : MonoBehaviour
             
             // Change tower's color back to normal
             other.gameObject.GetComponent<SpriteRenderer>().color = Color.white;
+        }
+    }
+
+    public void RestartPosition()
+    {
+        // Set to start position
+        transform.position = startPosition;
+        
+        // Restart rotation
+        transform.rotation = Quaternion.Euler(0f, 0f, 90f);
+        
+        // Set isCrashed to false
+        isCrashed = false;
+
+        if (closestTower)
+        {
+            closestTower.GetComponent<SpriteRenderer>().color = Color.white;
+            closestTower = null;
         }
     }
 }
