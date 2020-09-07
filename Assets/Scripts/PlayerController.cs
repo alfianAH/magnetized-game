@@ -7,6 +7,8 @@ public class PlayerController : MonoBehaviour
         pullForce = 100f,
         rotateSpeed = 360f;
 
+    [SerializeField] private UIControllerScript uiControl;
+
     private GameObject closestTower,
         hookedTower;
     private Rigidbody2D rb2D;
@@ -67,6 +69,7 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("Goal"))
         {
             Debug.Log("Level clear");
+            uiControl.EndGame();
         }
     }
 
