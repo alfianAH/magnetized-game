@@ -1,6 +1,6 @@
 ﻿# Magnetized game
 
-This is just a simple ping-pong game with a little modification.
+This game consists of several levels with the objective of each level is to direct moving objects to reach the end of the path by "hooking" the object to the "tower".
 
 ## How to Install
 1. Go to [Release tab](https://github.com/alfianAH/magnetized-game/releases)
