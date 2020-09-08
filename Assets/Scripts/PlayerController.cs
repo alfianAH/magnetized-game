@@ -72,6 +72,7 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("Goal"))
         {
             Debug.Log("Level clear");
+            Destroy(gameObject);
             uiControl.EndGame();
         }
     }
@@ -119,10 +120,9 @@ public class PlayerController : MonoBehaviour
             Vector3 pullDirection = (hookedTower.transform.position - transform.position).normalized;
             float newPullForce = Mathf.Clamp(pullForce / distance, 20, 50);
             rb2D.AddForce(pullDirection * newPullForce);
-                
+            
             // Angular velocity
             rb2D.angularVelocity = -rotateSpeed / distance;
-                
             isPulled = true;
         }
     }
