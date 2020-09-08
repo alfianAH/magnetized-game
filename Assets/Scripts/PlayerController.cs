@@ -30,32 +30,12 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.Z) && !isPulled)
         {
-            if (closestTower && !hookedTower)
-            {
-                hookedTower = closestTower;
-            }
-
-            if (hookedTower)
-            {
-                float distance = Vector2.Distance(transform.position, hookedTower.transform.position);
-                
-                // Gravitation toward tower
-                Vector3 pullDirection = (hookedTower.transform.position - transform.position).normalized;
-                float newPullForce = Mathf.Clamp(pullForce / distance, 20, 50);
-                rb2D.AddForce(pullDirection * newPullForce);
-                
-                // Angular velocity
-                rb2D.angularVelocity = -rotateSpeed / distance;
-                
-                isPulled = true;
-            }
+            PullPlayer();
         }
 
         if (Input.GetKeyUp(KeyCode.Z))
         {
-            isPulled = false;
-            hookedTower = null;
-            rb2D.angularVelocity = 0;
+            ReleasePlayer();
         }
 
         if (isCrashed)
@@ -122,6 +102,45 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Pull player to tower
+    /// </summary>
+    public void PullPlayer()
+    {
+        if (closestTower && !hookedTower)
+        {
+            hookedTower = closestTower;
+        }
+
+        if (hookedTower)
+        {
+            float distance = Vector2.Distance(transform.position, hookedTower.transform.position);
+                
+            // Gravitation toward tower
+            Vector3 pullDirection = (hookedTower.transform.position - transform.position).normalized;
+            float newPullForce = Mathf.Clamp(pullForce / distance, 20, 50);
+            rb2D.AddForce(pullDirection * newPullForce);
+                
+            // Angular velocity
+            rb2D.angularVelocity = -rotateSpeed / distance;
+                
+            isPulled = true;
+        }
+    }
+
+    /// <summary>
+    /// Release player
+    /// </summary>
+    public void ReleasePlayer()
+    {
+        isPulled = false;
+        hookedTower = null;
+        rb2D.angularVelocity = 0;
+    }
+
+    /// <summary>
+    /// Restart position
+    /// </summary>
     public void RestartPosition()
     {
         // Set to start position
