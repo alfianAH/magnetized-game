@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
@@ -9,7 +8,7 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private UIControllerScript uiControl;
 
-    private AudioSource audio;
+    private AudioSource audioSource;
     private GameObject closestTower,
         hookedTower;
     private Rigidbody2D rb2D;
@@ -20,7 +19,7 @@ public class PlayerController : MonoBehaviour
     
     private void Start()
     {
-        audio = GetComponent<AudioSource>();
+        audioSource = GetComponent<AudioSource>();
         rb2D = GetComponent<Rigidbody2D>();
 
         startPosition = transform.position;
@@ -40,7 +39,7 @@ public class PlayerController : MonoBehaviour
 
         if (isCrashed)
         {
-            if (!audio.isPlaying)
+            if (!audioSource.isPlaying)
             {
                 // Restart scene
                 RestartPosition();
@@ -60,7 +59,7 @@ public class PlayerController : MonoBehaviour
             if (!isCrashed)
             {
                 // Play SFX
-                audio.Play();
+                audioSource.Play();
                 rb2D.velocity = Vector2.zero;
                 rb2D.angularVelocity = 0f;
                 isCrashed = true;
